@@ -12,13 +12,38 @@ const cover = document.getElementById('cover');
 
 const songs = ['The xx - Intro', 'Foster The People - Pumped Up Kicks', 'Alt-J - Every Other Freckle'];
 
-let songIndex = 0;
+let songIndex = 2;
 
 loadSong(songs[songIndex]);
 
 function loadSong(song) {
-    console.log(song)
     title.innerText = song;
     audio.src = `music/${song}.mp3`;
     cover.src = `images/${song}.jpg`
 }
+
+function playSong() {
+    musicContainer.classList.add('play');
+    playBtn.querySelector('i.fas').classList.remove('fa-play');
+    playBtn.querySelector('i.fas').classList.add('fa-pause');
+
+    audio.play();
+}
+
+function pauseSong() {
+    musicContainer.classList.remove('play');
+    playBtn.querySelector('i.fas').classList.add('fa-play');
+    playBtn.querySelector('i.fas').classList.remove('fa-pause');
+
+    audio.pause();
+}
+
+playBtn.addEventListener('click', () => {
+    const isPlaying = musicContainer.classList.contains('play');
+
+    if (isPlaying) {
+        pauseSong();
+    } else {
+        playSong();
+    }
+})
