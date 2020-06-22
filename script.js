@@ -12,7 +12,7 @@ const cover = document.getElementById('cover');
 
 const songs = ['The xx - Intro', 'Foster The People - Pumped Up Kicks', 'Alt-J - Every Other Freckle'];
 
-let songIndex = 2;
+let songIndex = 0;
 
 loadSong(songs[songIndex]);
 
@@ -30,12 +30,50 @@ function playSong() {
     audio.play();
 }
 
+function prevSong() {
+    songIndex--;
+
+    if (songIndex < 0) {
+        songIndex = songs.length - 1;
+    }
+
+    loadSong(songs[songIndex]);
+
+    playSong();
+}
+
+function nextSong() {
+    songIndex++;
+
+    if (songIndex > songs.length - 1) {
+        songIndex = 0;
+    }
+
+    loadSong(songs[songIndex]);
+
+    playSong();
+}
+
+function updateProgress(e) {
+    const {duration, currentTime} = e.srcElement;
+    const progressPercent = (currentTime / duration) * 100;
+    progress.style.width = `${progressPercent}%`
+}
+
 function pauseSong() {
     musicContainer.classList.remove('play');
     playBtn.querySelector('i.fas').classList.add('fa-play');
     playBtn.querySelector('i.fas').classList.remove('fa-pause');
 
     audio.pause();
+}
+
+function setProgress(e) {
+    const width = this.clientWidth;
+    const clickX = e.offsetX;
+    const duration = audio.duration
+
+    audio.currentTime = (clickX / width) * duration;
 }
 
 playBtn.addEventListener('click', () => {
@@ -46,4 +84,13 @@ playBtn.addEventListener('click', () => {
     } else {
         playSong();
     }
-})
+});
+
+prevBtn.addEventListener('click', prevSong);
+nextBtn.addEventListener('click', nextSong);
+
+audio.addEventListener('timeupdate', updateProgress);
+
+progressContainer.addEventListener('click', setProgress);
+
+audio.addEventListener('ended', nextSong);
